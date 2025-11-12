@@ -2,33 +2,33 @@ packages:
   - playground
   - packages/*
 catalog:
-  '@antfu/eslint-config': ^3.3.2
+  '@antfu/eslint-config': ^6.2.0
   '@types/debug': ^4.1.12
   '@types/fs-extra': ^11.0.4
-  '@types/node': ^22.5.0
-  '@unocss/config': ^0.62.3
-  '@unocss/core': ^0.62.3
-  '@unocss/preset-mini': ^0.62.3
-  '@vitejs/plugin-vue': ^5.0.2
-  bumpp: ^9.2.1
-  chalk: ^5.3.0
-  cross-env: ^7.0.3
-  debug: ^4.3.4
-  eslint: ^9.9.1
-  esno: ^4.0.0
-  fast-glob: ^3.3.2
-  fs-extra: ^11.2.0
-  lint-staged: ^15.2.0
-  nodemon: ^3.0.2
-  rimraf: ^6.0.1
-  rollup: ^4.9.2
-  simple-git-hooks: ^2.9.0
-  tsup: ^8.0.1
-  typescript: ^5.5.4
-  unocss: ^0.62.3
-  unocss-preset-useful: ^0.5.2
-  vite: ^5.4.2
-  vite-plugin-inspect: ^0.8.1
-  vitest: ^2.0.5
-  vue: ^3.4.3
-  webpack: ^5.94.0
+  '@types/node': ^24.10.1
+  '@unocss/config': ^66.5.6
+  '@unocss/core': ^66.5.6
+  '@unocss/preset-mini': ^66.5.6
+  '@vitejs/plugin-vue': ^6.0.1
+  bumpp: ^10.3.1
+  chalk: ^5.6.2
+  cross-env: ^10.1.0
+  debug: ^4.4.3
+  eslint: ^9.39.1
+  esno: ^4.8.0
+  fast-glob: ^3.3.3
+  fs-extra: ^11.3.2
+  lint-staged: ^16.2.6
+  nodemon: ^3.1.11
+  rimraf: ^6.1.0
+  rollup: ^4.53.2
+  simple-git-hooks: ^2.13.1
+  tsdown: ^0.16.3
+  typescript: ^5.9.3
+  unocss: ^66.5.6
+  unocss-preset-useful: ^1.0.1
+  vite: ^7.2.2
+  vite-plugin-inspect: ^11.3.3
+  vitest: ^4.0.8
+  vue: ^3.5.24
+  webpack: ^5.102.1

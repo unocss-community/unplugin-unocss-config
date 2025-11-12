@@ -79,19 +79,11 @@ interface Theme {
 }
 
 declare global {
-  const __UNO__: Pick<ReturnType<typeof import('unocss').createGenerator<Theme>>, 'config' | 'userConfig' | 'version' | 'blocked'>
-
   const __UNO_CONFIG__: import('unocss').UserConfig<Theme>
-
   const __UNO_THEME__: Theme
 
-  interface ImportMetaEnv {
-    readonly __UNO__: Pick<ReturnType<typeof import('unocss').createGenerator<Theme>>, 'config' | 'userConfig' | 'version' | 'blocked'>
-    readonly __UNO_CONFIG__: import('unocss').UserConfig<Theme>
-    readonly __UNO_THEME__: Theme
-  }
-
-  interface ImportMeta {
-    readonly env: ImportMetaEnv
+  interface Window {
+    __UNO_CONFIG__: import('unocss').UserConfig<Theme>
+    __UNO_THEME__: Theme
   }
 }

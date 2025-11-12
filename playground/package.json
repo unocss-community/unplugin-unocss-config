@@ -10,7 +10,7 @@
     "vue": "catalog:"
   },
   "devDependencies": {
-    "@onu-ui/preset": "^1.1.2",
+    "@onu-ui/preset": "^1.1.5",
     "@vitejs/plugin-vue": "catalog:",
     "cross-env": "catalog:",
     "unocss": "catalog:",

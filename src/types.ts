@@ -1,6 +1,7 @@
 export interface Options {
   /**
-   * Uno config path
+   * Enable debug mode
+   * @default false
    */
-  path?: string
+  debug?: boolean
 }
