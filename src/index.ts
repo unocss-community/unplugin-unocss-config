@@ -78,7 +78,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) =
       },
 
       transformIndexHtml() {
-        // 通过 transformIndexHtml 注入配置到页面
         if (!configToInject) {
           return []
         }
