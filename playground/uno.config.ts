@@ -1,6 +1,4 @@
-import presetOnu from '@onu-ui/preset'
-import { defineConfig, presetIcons, presetWind4 } from 'unocss'
-import { presetUseful } from 'unocss-preset-useful'
+import { defineConfig, presetWind4 } from 'unocss'
 
 export default defineConfig({
   theme: {
