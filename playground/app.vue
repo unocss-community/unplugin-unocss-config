@@ -1,18 +1,20 @@
 <script lang='ts' setup>
+import { config, theme } from 'virtual:unocss-config'
+
 // 测试全局变量注入
 // eslint-disable-next-line no-console
 console.log('=== UnoCSS Config Test ===')
 // eslint-disable-next-line no-console
-console.log('Theme:', __UNO_THEME__)
+console.log('Theme:', theme)
 // eslint-disable-next-line no-console
-console.log('Config:', __UNO_CONFIG__)
+console.log('Config:', config)
 
 // 提取预设和转换器信息
-const presets = __UNO_CONFIG__.presets?.map((p: any) => p.name) || []
-const transformers = __UNO_CONFIG__.transformers?.map((t: any) => t.name) || []
+const presets = config.presets?.map((p: any) => p.name) || []
+const transformers = config.transformers?.map((t: any) => t.name) || []
 
 // 访问主题配置
-const themeFontFamily = __UNO_THEME__.fontFamily || {}
+const themeFontFamily = theme.fontFamily || {}
 </script>
 
 <template>

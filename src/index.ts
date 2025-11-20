@@ -1,12 +1,46 @@
-import { createUnplugin, type UnpluginFactory } from 'unplugin'
 import type { UnocssVitePluginAPI } from '@unocss/vite'
+import type { UnpluginFactory } from 'unplugin'
 import type { Plugin } from 'vite'
 import type { Options } from './types'
+import { createUnplugin } from 'unplugin'
+
+const IGNORED_KEYS = [
+  'rules',
+  'variants',
+  'shortcuts',
+  'layers',
+  'preflights',
+  'extractors',
+  'autocomplete',
+]
+
+function serializeConfig(config: any): string {
+  return JSON.stringify(config, (key, value) => {
+    if (typeof value === 'function')
+      return undefined
+
+    if (IGNORED_KEYS.includes(key))
+      return undefined
+
+    if (key === 'presets' || key === 'transformers') {
+      if (Array.isArray(value)) {
+        return value.map((item: any) => ({
+          name: item.name || 'anonymous',
+        }))
+      }
+    }
+
+    return value
+  })
+}
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) => {
   let uno: any
   let _sources: string[]
-  let configToInject: any = null
+  let configToInject: { __UNO_CONFIG__: string, __UNO_THEME__: string } | null = null
+
+  const MODULE_ID = 'virtual:unocss-config'
+  const RESOLVED_MODULE_ID = `\0${MODULE_ID}`
 
   return {
     name: 'unplugin-unocss-config',
@@ -30,39 +64,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) =
               console.log('[unplugin-unocss-config] Config sources:', _sources)
             }
 
-            // 序列化配置
-            const serializeConfig = (obj: any): string => {
-              return JSON.stringify(obj, (key, value) => {
-                if (typeof value === 'function') {
-                  return undefined
-                }
-
-                if (value && typeof value === 'object') {
-                  if (key === 'presets' || key === 'transformers') {
-                    return value.map((item: any) => ({
-                      name: item.name || 'anonymous',
-                    }))
-                  }
-
-                  if (key === 'rules' || key === 'variants' || key === 'shortcuts') {
-                    return undefined
-                  }
-                  if (key === 'layers' || key === 'preflights' || key === 'extractors') {
-                    return undefined
-                  }
-                  if (key === 'autocomplete') {
-                    return undefined
-                  }
-
-                  if (key === 'safelist' && Array.isArray(value)) {
-                    return value
-                  }
-                }
-
-                return value
-              })
-            }
-
             configToInject = {
               __UNO_CONFIG__: serializeConfig(uno.config),
               __UNO_THEME__: serializeConfig(uno.config.theme || {}),
@@ -77,25 +78,19 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) =
         }
       },
 
-      transformIndexHtml() {
-        if (!configToInject) {
-          return []
-        }
+      resolveId(id) {
+        if (id === MODULE_ID)
+          return RESOLVED_MODULE_ID
+      },
 
-        return [
-          {
-            tag: 'script',
-            injectTo: 'head-prepend',
-            children: `
-              window.__UNO_CONFIG__ = ${configToInject.__UNO_CONFIG__};
-              window.__UNO_THEME__ = ${configToInject.__UNO_THEME__};
-              if (typeof globalThis !== 'undefined') {
-                globalThis.__UNO_CONFIG__ = window.__UNO_CONFIG__;
-                globalThis.__UNO_THEME__ = window.__UNO_THEME__;
-              }
-            `,
-          },
-        ]
+      load(id) {
+        if (id === RESOLVED_MODULE_ID) {
+          return `
+            export const config = ${configToInject?.__UNO_CONFIG__ || '{}'}
+            export const theme = ${configToInject?.__UNO_THEME__ || '{}'}
+            export default { config, theme }
+          `
+        }
       },
     },
   }
