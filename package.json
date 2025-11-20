@@ -2,7 +2,7 @@
   "name": "unplugin-unocss-config",
   "type": "module",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.21.0",
+  "packageManager": "pnpm@10.22.0",
   "description": "Use uno config in run-time",
   "license": "MIT",
   "homepage": "https://github.com/unpreset/unplugin-unocss-config#readme",

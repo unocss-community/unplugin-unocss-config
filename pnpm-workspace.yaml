@@ -11,7 +11,7 @@ catalog:
   '@unocss/core': ^66.5.7
   '@unocss/nuxt': ^66.5.7
   '@unocss/preset-mini': ^66.5.7
-  '@vitejs/plugin-vue': ^6.0.1
+  '@vitejs/plugin-vue': ^6.0.2
   bumpp: ^10.3.1
   chalk: ^5.6.2
   cross-env: ^10.1.0
@@ -20,18 +20,18 @@ catalog:
   esno: ^4.8.0
   fast-glob: ^3.3.3
   fs-extra: ^11.3.2
-  lint-staged: ^16.2.6
+  lint-staged: ^16.2.7
   nodemon: ^3.1.11
   nuxt: ^4.2.1
-  rimraf: ^6.1.0
-  rollup: ^4.53.2
+  rimraf: ^6.1.2
+  rollup: ^4.53.3
   simple-git-hooks: ^2.13.1
-  tsdown: ^0.16.3
+  tsdown: ^0.16.6
   typescript: ^5.9.3
   unocss: ^66.5.7
   unocss-preset-useful: ^1.0.1
-  vite: ^7.2.2
+  vite: ^7.2.4
   vite-plugin-inspect: ^11.3.3
-  vitest: ^4.0.8
+  vitest: ^4.0.10
   vue: ^3.5.24
-  webpack: ^5.102.1
+  webpack: ^5.103.0
