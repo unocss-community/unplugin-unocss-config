@@ -2,38 +2,41 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin-unocss-config?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-unocss-config)
 
-Access UnoCSS configuration at runtime in your application.
+Access UnoCSS configuration at runtime in your application through virtual modules.
 
 ## Features
 
 - 🔄 **Automatic Detection**: Detects UnoCSS plugin and reuses its context
-- 🔧 **Standalone Mode**: Works without UnoCSS plugin by loading config directly
-- 🌐 **Global Access**: Exposes config via global variables and `import.meta.env`
+- 🚀 **Virtual Module**: Import config via `virtual:unocss-config`
+- 🔥 **HMR Support**: Hot module reload when UnoCSS config changes
 - 🎨 **Type Safe**: Full TypeScript support with type definitions
 - 📦 **Tree-shakable**: Only serializes necessary configuration data
 
 ## How It Works
 
-This plugin detects the `unocss:api` plugin and retrieves the UnoCSS context, generator instance, and config sources. It then injects the serialized configuration into your HTML as global variables via a `<script>` tag, allowing runtime access to:
-- Theme configuration
+This plugin detects the `unocss:api` plugin and retrieves the UnoCSS context, generator instance, and config sources. It then provides the serialized configuration through a virtual module (`virtual:unocss-config`), allowing runtime access to:
+- Theme configuration (colors, fonts, spacing, breakpoints, etc.)
 - Preset names
 - Transformer names
 - Other serializable config options
 
-**Important**: This plugin requires the UnoCSS Vite plugin (`unocss/vite`) to be installed and configured before it.
+**Important**: This plugin requires the UnoCSS Vite plugin (`@unocss/vite`) to be installed and configured before it.
 
 ## Usage
 
-```html
+```vue
 <script lang='ts' setup>
-// Access UnoCSS config
-console.log(__UNO_CONFIG__)
-console.log(__UNO_THEME__)
+import { config, theme } from 'virtual:unocss-config'
+
+// Access full config
+console.log(config)
+console.log(theme)
 
 // Use config data
-const presets = __UNO_CONFIG__.presets?.map((p: any) => p.name)
-const transformers = __UNO_CONFIG__.transformers?.map((t: any) => t.name)
-const fontFamily = __UNO_THEME__.fontFamily
+const presets = config.presets?.map((p: any) => p.name)
+const transformers = config.transformers?.map((t: any) => t.name)
+const fontFamily = theme.fontFamily
+const colors = theme.colors
 </script>
 ```
 
@@ -48,14 +51,14 @@ pnpm add unplugin-unocss-config
 
 ```ts
 // vite.config.ts
-import UnoCSS from 'unocss/vite'
+import UnoCSS from '@unocss/vite'
 import UnoCSSConfig from 'unplugin-unocss-config/vite'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
     UnoCSS(), // Required: UnoCSS plugin must be added first
     UnoCSSConfig({
-      // Options
       debug: false, // Enable debug logging (optional)
     }),
   ],
@@ -63,10 +66,17 @@ export default defineConfig({
 ```
 
 ### Type Definitions
+Add the type reference to enable TypeScript support for the virtual module:
+
 ```ts
 // vite-env.d.ts or env.d.ts
 /// <reference types="unplugin-unocss-config/client" />
 ```
+
+This provides type definitions for:
+- `virtual:unocss-config` module
+- Theme types (colors, fonts, spacing, etc.)
+- Config types
 
 Example: [`playground/`](./playground/)
 
@@ -76,18 +86,17 @@ Example: [`playground/`](./playground/)
 <summary>Nuxt</summary><br>
 
 ```ts
-// nuxt.config.js
-export default {
+// nuxt.config.ts
+export default defineNuxtConfig({
   modules: [
-    ['unplugin-unocss-config/nuxt', {
-      path: './uno.config.ts', // Custom config path (optional)
-      debug: false, // Enable debug logging (optional)
-    }],
+    '@unocss/nuxt',
+    'unplugin-unocss-config/nuxt',
   ],
-}
+  unoCSSConfig: {
+    debug: false, // Enable debug logging (optional)
+  },
+})
 ```
-
-> This module works for both Nuxt 2 and [Nuxt Vite](https://github.com/nuxt/vite)
 
 <br></details>
 
@@ -103,26 +112,51 @@ interface Options {
 }
 ```
 
-## Available Global Variables
+## Virtual Module API
 
-### `__UNO_CONFIG__`
+### `virtual:unocss-config`
+
+Import the config and theme:
+
+```ts
+import { config, theme } from 'virtual:unocss-config'
+```
+
+Or import the default export:
+
+```ts
+import unoConfig from 'virtual:unocss-config'
+// unoConfig.config
+// unoConfig.theme
+```
+
+#### `config`
 The UnoCSS configuration object (serialized). Contains:
-- `presets`: Array of preset names
-- `transformers`: Array of transformer names
+- `presets`: Array of preset objects with names
+- `transformers`: Array of transformer objects with names
 - `theme`: Theme configuration
 - `safelist`: Safelist patterns
 - Other serializable config options
 
-**Note**: Functions, rules, variants, shortcuts are excluded from serialization.
+**Note**: Functions and certain complex objects (rules, variants, shortcuts, layers, preflights, extractors, autocomplete) are excluded from serialization.
 
-### `__UNO_THEME__`
+#### `theme`
 Direct access to the theme configuration object, including:
 - `colors`: Color palette
 - `fontFamily`: Font families
 - `fontSize`: Font size scale
 - `spacing`: Spacing scale
 - `breakpoints`: Responsive breakpoints
-- And more...
+- `borderRadius`: Border radius values
+- `boxShadow`: Box shadow values
+- And more theme properties...
+
+## HMR Support
+
+The plugin automatically watches UnoCSS config files. When the config changes:
+- The virtual module is invalidated
+- HMR updates are triggered
+- Your app receives the latest config without full reload
 
 ## License
 
