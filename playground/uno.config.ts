@@ -1,5 +1,5 @@
 import presetOnu from '@onu-ui/preset'
-import { defineConfig } from 'unocss'
+import { defineConfig, presetIcons, presetWind4 } from 'unocss'
 import { presetUseful } from 'unocss-preset-useful'
 
 export default defineConfig({
@@ -10,17 +10,21 @@ export default defineConfig({
     },
   },
   presets: [
-    presetUseful({
-      icons: {
-        extraProperties: {
-          'display': 'inline-block',
-          'vertical-align': 'middle',
-        },
-      },
-    }),
-    presetOnu({
-      color: '#FF5722',
-    }),
+    // presetUseful({
+    //   icons: {
+    //     extraProperties: {
+    //       'display': 'inline-block',
+    //       'vertical-align': 'middle',
+    //     },
+    //   },
+    // }),
+
+    presetWind4(),
+    // presetIcons(),
+
+    // presetOnu({
+    //   color: '#FF5722',
+    // }),
   ],
   preflights: [
     {

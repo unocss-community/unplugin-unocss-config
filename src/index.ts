@@ -1,6 +1,7 @@
-import type { UnocssVitePluginAPI } from '@unocss/vite'
+import type { UnocssPluginContext } from '@unocss/core'
+import type { UnocssVitePluginAPI, VitePluginConfig } from '@unocss/vite'
 import type { UnpluginFactory } from 'unplugin'
-import type { Plugin } from 'vite'
+import type { HmrContext, Plugin } from 'vite'
 import type { Options } from './types'
 import { createUnplugin } from 'unplugin'
 
@@ -36,11 +37,22 @@ function serializeConfig(config: any): string {
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) => {
   let uno: any
-  let _sources: string[]
+  let _sources: string[] = []
   let configToInject: { __UNO_CONFIG__: string, __UNO_THEME__: string } | null = null
+  let ctx: UnocssPluginContext<VitePluginConfig> | undefined
 
   const MODULE_ID = 'virtual:unocss-config'
   const RESOLVED_MODULE_ID = `\0${MODULE_ID}`
+
+  const updateConfig = (): void => {
+    if (ctx && ctx.uno) {
+      uno = ctx.uno
+      configToInject = {
+        __UNO_CONFIG__: serializeConfig(uno.config),
+        __UNO_THEME__: serializeConfig(uno.config.theme || {}),
+      }
+    }
+  }
 
   return {
     name: 'unplugin-unocss-config',
@@ -52,21 +64,16 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) =
 
         if (unoPlugin && 'api' in unoPlugin) {
           try {
-            const ctx = (unoPlugin.api as UnocssVitePluginAPI).getContext()
+            ctx = (unoPlugin.api as UnocssVitePluginAPI).getContext()
             await ctx.ready
             uno = ctx.uno
             _sources = ctx.getConfigFileList()
 
-            if (options?.debug) {
-              // eslint-disable-next-line no-console
-              console.log('[unplugin-unocss-config] Using UnoCSS plugin uno context', ctx.uno)
-              // eslint-disable-next-line no-console
-              console.log('[unplugin-unocss-config] Config sources:', _sources)
-            }
+            updateConfig()
 
-            configToInject = {
-              __UNO_CONFIG__: serializeConfig(uno.config),
-              __UNO_THEME__: serializeConfig(uno.config.theme || {}),
+            if (options?.debug) {
+              console.log('[unplugin-unocss-config] Using UnoCSS plugin uno context', ctx.uno)
+              console.log('[unplugin-unocss-config] Config sources:', _sources)
             }
           }
           catch (error) {
@@ -75,6 +82,25 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) =
         }
         else {
           console.warn('[unplugin-unocss-config] UnoCSS plugin not found. Please add @unocss/vite plugin before this plugin.')
+        }
+      },
+
+      async handleHotUpdate(hmrContext: HmrContext) {
+        const { file, server } = hmrContext
+        if (_sources.includes(file)) {
+          if (ctx) {
+            await ctx.reloadConfig()
+            _sources = ctx.getConfigFileList()
+            updateConfig()
+          }
+
+          const mod = server.moduleGraph.getModuleById(RESOLVED_MODULE_ID)
+          if (mod) {
+            if (options?.debug) {
+              console.log('[unplugin-unocss-config] HMR update for:', mod.url)
+            }
+            return [mod]
+          }
         }
       },
 
