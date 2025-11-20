@@ -1,7 +1,6 @@
 import type { Options } from './types'
 import { addVitePlugin, defineNuxtModule } from '@nuxt/kit'
 import vite from './vite'
-import '@nuxt/schema'
 
 export interface ModuleOptions extends Options {
 
@@ -9,13 +8,22 @@ export interface ModuleOptions extends Options {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-unplugin-starter',
-    configKey: 'unpluginStarter',
+    name: 'unplugin-unocss-config',
+    configKey: 'unocssConfig',
   },
   defaults: {
-    // ...default options
+    debug: false,
   },
   setup(options, _nuxt) {
     addVitePlugin(() => vite(options))
   },
 })
+
+declare module '@nuxt/schema' {
+  interface NuxtConfig {
+    unocssConfig?: ModuleOptions
+  }
+  interface NuxtOptions {
+    unocssConfig?: ModuleOptions
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "preview": "nuxi preview"
+  },
+  "dependencies": {
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@onu-ui/preset": "^1.1.5",
+    "@unocss/nuxt": "catalog:",
+    "nuxt": "catalog:",
+    "unocss": "catalog:",
+    "unocss-preset-useful": "catalog:",
+    "unplugin-unocss-config": "workspace:*"
+  }
+}

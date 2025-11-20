@@ -35,7 +35,7 @@ function serializeConfig(config: any): string {
   })
 }
 
-export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) => {
+export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}) => {
   let uno: any
   let _sources: string[] = []
   let configToInject: { __UNO_CONFIG__: string, __UNO_THEME__: string } | null = null
@@ -71,7 +71,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) =
 
             updateConfig()
 
-            if (options?.debug) {
+            if (options.debug === true) {
               console.log('[unplugin-unocss-config] Using UnoCSS plugin uno context', ctx.uno)
               console.log('[unplugin-unocss-config] Config sources:', _sources)
             }
@@ -96,7 +96,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options) =
 
           const mod = server.moduleGraph.getModuleById(RESOLVED_MODULE_ID)
           if (mod) {
-            if (options?.debug) {
+            if (options.debug === true) {
               console.log('[unplugin-unocss-config] HMR update for:', mod.url)
             }
             return [mod]

@@ -63,6 +63,7 @@
     "dev": "tsdown --watch",
     "lint": "eslint .",
     "play": "pnpm -C playground run dev",
+    "play:nuxt": "pnpm -C playground-nuxt run dev",
     "prepublishOnly": "pnpm build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
@@ -85,7 +86,7 @@
     }
   },
   "dependencies": {
-    "@unocss/vite": "^66.5.6",
+    "@unocss/vite": "^66.5.7",
     "unplugin": "^2.3.10"
   },
   "devDependencies": {

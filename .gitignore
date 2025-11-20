@@ -1,2 +1,6 @@
 dist
 node_modules
+.nuxt
+.output
+.env
+.DS_Store
