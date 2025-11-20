@@ -66,6 +66,7 @@
     "play:nuxt": "pnpm -C playground-nuxt run dev",
     "prepublishOnly": "pnpm build",
     "release": "bumpp && pnpm publish",
+    "release:beta": "bumpp --preid beta && pnpm publish --tag beta",
     "start": "esno src/index.ts",
     "test": "vitest"
   },
